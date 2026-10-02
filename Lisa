@@ -1,0 +1,43 @@
+import pygame
+
+pygame.init()
+screen = pygame.display.set_mode((800, 600))
+clock = pygame.time.Clock()
+font = pygame.font.SysFont("Arial", 48)
+
+# Game Variables
+pet = pygame.Rect(400, 300, 40, 40)
+foods = [pygame.Rect(x, y, 20, 20) for x, y in [(200, 150), (600, 400), (400, 100)]]
+
+while True:
+  for e in pygame.event.get():
+    if e.type == pygame.QUIT:
+      pygame.quit()
+
+  # Movement
+  keys = pygame.key.get_pressed()
+  if keys[pygame.K_LEFT]:
+    pet.x -= 5
+  if keys[pygame.K_RIGHT]:
+    pet.x += 5
+  if keys[pygame.K_UP]:
+    pet.y -= 5
+  if keys[pygame.K_DOWN]:
+    pet.y += 5
+
+  # Collision Detection
+  foods = [f for f in foods if not pet.colliderect(f)]
+
+  # Draw Graphics
+  screen.fill((50, 50, 50))  # Background
+  pygame.draw.rect(screen, (0, 0, 255), pet)  # Pet
+
+  for f in foods:
+    pygame.draw.rect(screen, (255, 0, 0), f)  # Food
+
+  if not foods:  # Completion Message
+    txt = font.render("Game Completed!", True, (255, 255, 255))
+    screen.blit(txt, txt.get_rect(center=(400, 300)))
+
+  pygame.display.flip()
+  clock.tick(60)
